@@ -1,18 +1,17 @@
 
-function testTask(){
-    console.log('test task')
+function dateChange(e) {
+    let checkedDate = e.target.value;
+    let parsedDate = new Date(checkedDate);
+    console.log(parsedDate);
 }
 
-
-function clickHandler(e) {
-  setTimeout(testTask, 1000);
-}
 
 function main() {
     console.log('task started')
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  document.querySelector('button').addEventListener('click', clickHandler);
+
+  document.querySelector('.dateInput').onchange = dateChange;
   main();
 });
