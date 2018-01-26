@@ -1,32 +1,9 @@
-class SavedArticle {
-    constructor(base) {
-        this.base = base;
-        this.render()
-    }
-
-    render() {
-        this.createAddMoreBtn();
-        this.base.appendChild(SavedArticle.createFormEntry());
-        console.log(this.base);
-    }
-
-    createAddMoreBtn() {
-        let addMoreBtn = document.createElement('button');
-        let div = document.getElementById('addMoreBtn');
-        addMoreBtn.textContent = '+';
-        addMoreBtn.addEventListener('click', () => {
-            this.base.appendChild(SavedArticle.createFormEntry());
-        });
-
-        div.appendChild(addMoreBtn);
-        return div
-    }
-
+class AppStructureCreator {
     static createFormEntry() {
         let div = document.createElement('div');
-        div.appendChild(SavedArticle.createTextInput());
-        div.appendChild(SavedArticle.createDateInput());
-        div.appendChild(SavedArticle.createSubmitBtn());
+        div.appendChild(AppStructureCreator.createTextInput());
+        div.appendChild(AppStructureCreator.createDateInput());
+        div.appendChild(AppStructureCreator.createSubmitBtn());
         return div;
     }
 
@@ -48,11 +25,37 @@ class SavedArticle {
         btn.textContent = 'Add';
         return btn;
     }
+}
 
+
+class AppLogicCreator extends AppStructureCreator {
+    constructor(base) {
+        super();
+        this.base = base;
+        this.render()
+    }
+
+    render() {
+        this.createAddMoreBtn();
+        this.base.appendChild(AppLogicCreator.createFormEntry());
+        console.log(this.base);
+    }
+
+    createAddMoreBtn() {
+        let addMoreBtn = document.createElement('button');
+        let div = document.getElementById('addMoreBtn');
+        addMoreBtn.textContent = '+';
+        addMoreBtn.addEventListener('click', () => {
+            this.base.appendChild(AppLogicCreator.createFormEntry());
+        });
+
+        div.appendChild(addMoreBtn);
+        return div
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
     let base = document.getElementById('app');
-    new SavedArticle(base);
+    new AppLogicCreator(base);
 });
 
