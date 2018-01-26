@@ -42,11 +42,19 @@ class AppLogicCreator extends AppStructureCreator {
     }
 
     createAddMoreBtn() {
+        let formCount = 1;
         let addMoreBtn = document.createElement('button');
         let div = document.getElementById('addMoreBtn');
         addMoreBtn.textContent = '+';
         addMoreBtn.addEventListener('click', () => {
-            this.base.appendChild(AppLogicCreator.createFormEntry());
+            if (formCount < 5){
+                this.base.appendChild(AppLogicCreator.createFormEntry());
+            }
+            else{
+                div.textContent = 'You can save only 5 articles at once!'
+            }
+            formCount++;
+            console.log(formCount);
         });
 
         div.appendChild(addMoreBtn);
