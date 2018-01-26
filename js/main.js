@@ -1,9 +1,13 @@
 class AppStructureCreator {
-    static createFormEntry() {
+    constructor() {
+        this.articleData = {};
+    }
+
+    createFormEntry() {
         let div = document.createElement('div');
         div.appendChild(AppStructureCreator.createTextInput());
         div.appendChild(AppStructureCreator.createDateInput());
-        div.appendChild(AppStructureCreator.createSubmitBtn());
+        div.appendChild(this.createSubmitBtn());
         return div;
     }
 
@@ -20,9 +24,13 @@ class AppStructureCreator {
         return dateInput;
     }
 
-    static createSubmitBtn() {
+    createSubmitBtn() {
         let btn = document.createElement('button');
         btn.textContent = 'Add';
+        btn.addEventListener('click', () => {
+            this.articleData.url = btn.parentElement.children[0].value;
+            this.articleData.time = btn.parentElement.children[1].value;
+        });
         return btn;
     }
 }
@@ -37,7 +45,7 @@ class AppLogicCreator extends AppStructureCreator {
 
     render() {
         this.createAddMoreBtn();
-        this.base.appendChild(AppLogicCreator.createFormEntry());
+        this.base.appendChild(this.createFormEntry());
         console.log(this.base);
     }
 
@@ -47,10 +55,10 @@ class AppLogicCreator extends AppStructureCreator {
         let div = document.getElementById('addMoreBtn');
         addMoreBtn.textContent = '+';
         addMoreBtn.addEventListener('click', () => {
-            if (formCount < 5){
-                this.base.appendChild(AppLogicCreator.createFormEntry());
+            if (formCount < 5) {
+                this.base.appendChild(this.createFormEntry());
             }
-            else{
+            else {
                 div.textContent = 'You can save only 5 articles at once!'
             }
             formCount++;
