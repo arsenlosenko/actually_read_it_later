@@ -2,7 +2,6 @@ class AppStructureCreator {
     constructor() {
         this.articleData = {};
     }
-
     createFormEntry() {
         let div = document.createElement('div');
         div.appendChild(AppStructureCreator.createTextInput());
