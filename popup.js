@@ -23,8 +23,12 @@ function clearAlarm() {
 }
 
 function setUrl(){
-    let time  = document.getElementById('dateTime');
-    console.log(url.value, new Date(time.value));
+    let url  = document.getElementById('urlInput');
+    chrome.alarms.create("testAlarm", {delayInMinutes: 0.1});
+    console.log("Alarm is fired");
+    chrome.storage.sync.set({'url': url.value}, function(){
+        alert(url.value + 'is in storage'); 
+    });
 }
 
 
@@ -32,7 +36,3 @@ document.getElementById('sampleSecond').addEventListener('click', setAlarm);
 document.getElementById('cancelAlarm').addEventListener('click', clearAlarm);
 document.getElementById('urlBtn').addEventListener('click', setUrl);
 
-//document.addEventListener("DOMContentLoaded", function(event) {
- //       console.log(new Date());
-  //      document.getElementById('dateTime').value = new Date();
-//});
