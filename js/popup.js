@@ -45,7 +45,7 @@ function setUrl(){
 }
 
 
-document.getElementById('sampleSecond').addEventListener('click', setAlarm);
-document.getElementById('cancelAlarm').addEventListener('click', clearAlarm);
+// document.getElementById('sampleSecond').addEventListener('click', setAlarm);
+// document.getElementById('cancelAlarm').addEventListener('click', clearAlarm);
 document.getElementById('urlBtn').addEventListener('click', setUrl);
 

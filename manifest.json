@@ -1,6 +1,6 @@
 {
-  "name": "Drink Water Event Popup",
-  "description": "Demonstrates usage and features of the event page by reminding user to drink water",
+  "name": "Actually Read it Later",
+  "description": "Extension for saving articles for later, and actually reading them",
   "version": "1.0",
   "manifest_version": 2,
   "permissions": ["alarms", "notifications", "storage", "tabs"],
@@ -9,7 +9,7 @@
     "persistent": false
   },
   "browser_action": {
-    "default_title": "Drink Water Event",
+    "default_title": "Read Your article Event",
     "default_popup": "popup.html"
   },
   "icons": {
