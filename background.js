@@ -8,20 +8,23 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
         chrome.notifications.create({
             type:     'basic',
             iconUrl:  'stay_hydrated.png',
-            title:    'Time to Hydrate',
+            title:    'Time to Read',
             message:   item.url , 
             buttons: [
-            {title: 'Keep it Flowing.'},
+            {title: 'Read Article'},
            {title: 'Test button 2'}
            ],
            priority: 0});
         });
     });
 
-chrome.notifications.onButtonClicked.addListener(function() {
+chrome.notifications.onButtonClicked.addListener(function(buttonIndex) {
+    console.log(buttonIndex);
   chrome.storage.sync.get(function(items) {
     chrome.browserAction.setBadgeText({text: 'ON'});
-    chrome.alarms.create({delayInMinutes: items[0].minutes});
+    chrome.storage.sync.get('url', function(item){
+        chrome.tabs.create({url: item.url});
+    });
   });
 });
 
