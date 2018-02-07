@@ -1,15 +1,15 @@
 'use strict';
 // TODO: save current state of app from click to click
 // TODO: set default time in datetime-local to today
-// TODO: change pictures
 // TODO: refactor JS
+// TODO: add analytics
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
     chrome.storage.sync.get('url', function(item){
         console.log(item);
         chrome.notifications.create({
             type:     'basic',
-            iconUrl:  '../img/stay_hydrated.png',
+            iconUrl:  '../img/notebook256.png',
             title:    'Time to Read',
             message:   item.url , 
             buttons: [
