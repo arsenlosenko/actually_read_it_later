@@ -7,7 +7,7 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
         console.log(item);
         chrome.notifications.create({
             type:     'basic',
-            iconUrl:  'stay_hydrated.png',
+            iconUrl:  '../img/stay_hydrated.png',
             title:    'Time to Read',
             message:   item.url , 
             buttons: [
