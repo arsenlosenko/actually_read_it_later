@@ -1,11 +1,12 @@
 'use strict';
-// TODO: set default time in datetime-local to today
-// TODO: check if value is empty and act accordingly
-// TODO: remove from local storage after alarm
+// TODO: remove alerts on close
+// TODO: format notification
+// TODO: open tab on notification button click
 // TODO: add analytics
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
-    let urlKey = alarm.name + 'url';
+    let urlKey = alarm.name; 
+    let timeKey = 'time'+urlKey.slice(-1);
 
     chrome.storage.sync.get(urlKey,function(item){
          chrome.notifications.create({
@@ -18,6 +19,9 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
             ],
             priority: 0});
     });
+    
+    localStorage.removeItem(urlKey);
+    localStorage.removeItem(timeKey);
     });
 
 chrome.notifications.onButtonClicked.addListener(function(buttonIndex) {
