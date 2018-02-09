@@ -1,6 +1,7 @@
 'use strict';
-// TODO: save current state of app from click to click
 // TODO: set default time in datetime-local to today
+// TODO: check if value is empty and act accordingly
+// TODO: remove from local storage after alarm
 // TODO: add analytics
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
