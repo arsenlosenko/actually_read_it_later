@@ -1,7 +1,6 @@
 'use strict';
 // TODO: remove alerts on close
 // TODO: verify entered url
-// TODO: style of datetime picker
 // TODO: open tab on notification button click
 // TODO: add analytics
 
