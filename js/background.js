@@ -1,6 +1,8 @@
 'use strict';
 // TODO: remove alerts on close
 // TODO: format notification
+// TODO: check priority of notifications
+// TODO: style of datetime picker
 // TODO: open tab on notification button click
 // TODO: add analytics
 

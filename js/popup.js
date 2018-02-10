@@ -21,14 +21,9 @@ function setAlarm(url, minutes, key){
 
 
 function formatDateTimeValue(){ 
-        let dateNow = new Date();
-        let year = dateNow.getFullYear();
-        let month = dateNow.getMonth().toString().length == 1 ? '0' + (dateNow.getMonth() + 1) : (dateNow.getMonth() + 1);
-        let day =  dateNow.getDate().toString().length == 1 ? '0' + dateNow.getDate() : dateNow.getDate() ;
-        let hours =  dateNow.getHours().toString().length == 1 ?  '0' + dateNow.getHours()  : dateNow.getHours();
-        let minutes =  dateNow.getMinutes().toString().length == 1 ? '0' + dateNow.getMinutes(): dateNow.getMinutes();
-
-        return  year+'-'+month+'-'+day+'T'+hours+":"+minutes;
+    let tzoffset = (new Date()).getTimezoneOffset() * 60000; 
+    let localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -8);
+    return localISOTime ;
 } 
 
 document.querySelectorAll('.urlBtn').forEach(function(item){
@@ -72,7 +67,7 @@ document.querySelectorAll('.date').forEach(function(item){
         console.log(localStorage.getItem(timeKey));
         item.value = localStorage.getItem(timeKey);
     }else{
-        item.value = formatDateTimeValue()
+        item.value = formatDateTimeValue();
     } 
 }
 );
