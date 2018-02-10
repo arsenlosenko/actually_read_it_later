@@ -1,3 +1,6 @@
 body{
-    width: 400px;
+    width: 550px;
+} 
+input[type="datetime-local"]{
+    width: 200px;
 } 

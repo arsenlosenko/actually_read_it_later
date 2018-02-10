@@ -5,18 +5,51 @@
     <link rel="stylesheet" href="css/popup.css"/>
   </head>
   <body>
+      <h3 class="text-center">
+        Actually read it later 
+      </h3>
       <div class="container">
           <div class="row">
-              <div class="col-md-12"></div>
-              <input id="urlInput"  type="text" name="url" placeholder="Enter URL here">
-              <input id="dateTime" type="datetime-local"> 
+              <div class="alert alert-danger alert-dismissable" style="display:none">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                      <strong>URL field is empty!</strong> Plese enter URL and save again.
+              </div>
+              <div class="alert alert-success alert-dismissable" style="display:none">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                      <strong>Success!</strong> Indicates a successful or positive action.
+              </div>
+              <ul class="list-group">
+                  <li class="list-group-item">
+                      <div class="col-md-6">
+                          <input class="urlInput1 url"  type="url" placeholder="Enter URL here" data-key="1">
+                          <input class="dateTime1 date" type="datetime-local" data-key="1"> 
+                          <button class="btn btn-success urlBtn" data-key="1">Set url</button>
+                      </div>
+                  </li>
+                  <li class="list-group-item">
+                      <div class="col-md-6">
+                          <input class="urlInput2 url"  type="text" placeholder="Enter URL here" data-key="2">
+                          <input class="dateTime2 date" type="datetime-local" data-key="2"> 
+                          <button class="btn btn-success urlBtn" data-key="2">Set url</button>
+                      </div>
+                  </li>
+                  <li class="list-group-item">
+                      <div class="col-md-6">
+                          <input class="urlInput3 url"  type="text" placeholder="Enter URL here" data-key="3">
+                          <input class="dateTime3 date" type="datetime-local" data-key="3"> 
+                          <button class="btn btn-success urlBtn" data-key="3">Set url</button>
+                      </div>
+                  </li>
+                  <li class="list-group-item">
+                      <div class="col-md-6">
+                          <input class="urlInput4 url"  type="text" placeholder="Enter URL here" data-key="4">
+                          <input class="dateTime4 date" type="datetime-local" data-key="4"> 
+                          <button class="btn btn-success urlBtn" data-key="4">Set url</button>
+                      </div>
+                  </li>
+              </ul>
           </div>
       </div>
-      <div class="row">
-              <button id="urlBtn">Set url</button>
-              <button id='sampleSecond' value='0.1'>Test Alarm</button>
-              <button id='cancelAlarm'>Cancel Alarm</button>
-          </div>
       </div>
    <script src="js/popup.js"></script>
   </body>
