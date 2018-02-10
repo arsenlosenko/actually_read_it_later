@@ -1,5 +1,6 @@
 'use strict';
 // TODO: remove alerts on close
+// TODO: complete format footer styling
 // TODO: verify entered url
 // TODO: open tab on notification button click
 // TODO: add analytics
