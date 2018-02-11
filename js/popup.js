@@ -1,3 +1,7 @@
+// Code of the 'Actually Read it Later' chrome extension (see manifest.json for further information
+// Maintainer: Arsen Losenko
+// Email: arsenlosenko@gmail.com
+
 'use strict';
 
 document.querySelectorAll('.urlBtn').forEach(function(item){

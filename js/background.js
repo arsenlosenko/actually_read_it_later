@@ -1,6 +1,9 @@
+// Code of the 'Actually Read it Later' chrome extension (see manifest.json for further information
+// Maintainer: Arsen Losenko
+// Email: arsenlosenko@gmail.com
+
 'use strict';
 // TODO: remove alerts on close
-// TODO: complete format footer styling
 // TODO: verify entered url
 // TODO: open tab on notification button click
 // TODO: add analytics
@@ -8,10 +11,10 @@
 function formatNotificationMessage(url){
     // TODO: think about better messages
     let phrases = [
-        `Here is your saved article:\n${url}\nHappy reading!`,
-        `Another article delivered for you!\n${url}\nEnjoy!`,
-        `Ring ring! Time to read!\n${url}`,
-        `There you go, another fine article!\n${url}`
+        `Here is your saved article:\n\n${url}\n\nHappy reading!`,
+        `Another article delivered for you!\n\n${url}\n\nEnjoy!`,
+        `Ring ring! Time to read!\n\n${url}`,
+        `There you go, another fine article!\n\n${url}`
     ]
     let randIndex = Math.floor(Math.random() * phrases.length);
     return phrases[randIndex] 
