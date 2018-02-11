@@ -3,12 +3,28 @@
 // Email: arsenlosenko@gmail.com
 
 'use strict';
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-92437551-1']);
+_gaq.push(['_trackPageview']);
 
-document.querySelectorAll('.urlBtn').forEach(function(item){
+(function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = 'https://ssl.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+            
+function trackButton(e) {
+    _gaq.push(['_trackEvent', e.target.id, 'clicked']);
+};
+
+document.getElementById('shareLink').addEventListener('click', trackButton);
+
+document.querySelectorAll('.saveUrl').forEach(function(item){
     item.addEventListener('click', function(){
         let key = this.dataset.key;
         getAlarmNotifications(key);
     });
+    item.addEventListener('click', trackButton);
 });
 
 document.querySelectorAll('.url').forEach(function(item){
@@ -59,8 +75,7 @@ function getAlarmNotifications(key){
         let articleUrl = document.querySelector('.urlInput' + key).value;
 
         if (readingTime === "" || articleUrl === ""){
-            document.querySelector('.alert-danger').style.display = 'block'; 
-            document.querySelector('.alert-success').style.display = 'none'; 
+            alert('URL field is empty, please add your URL and try again.');
         }
         else{
             let minutes = getTimeDiff(readingTime);
@@ -68,10 +83,6 @@ function getAlarmNotifications(key){
             localStorage.setItem(alarmTime, readingTime);
             setAlarm(articleUrl, minutes, key);
 
-            document.querySelector('.alert-danger').style.display = 'none'; 
-            document.querySelector('.alert-success').style.display = 'block'; 
         }
 } 
 
-
-            

@@ -3,6 +3,7 @@
   "description": "Extension for saving articles for later, and actually reading them",
   "version": "1.0",
   "manifest_version": 2,
+   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
   "permissions": ["alarms", "notifications", "storage", "tabs"],
   "background": {
     "scripts": ["js/background.js"],
