@@ -3,6 +3,8 @@
 // Email: arsenlosenko@gmail.com
 
 'use strict';
+
+// google analytics setup 
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-92437551-1']);
 _gaq.push(['_trackPageview']);
@@ -18,29 +20,48 @@ function trackButton(e) {
 };
 
 document.getElementById('shareLink').addEventListener('click', trackButton);
+// end of google analytics setup
+
+
+function formatDateTimeValue(){ 
+    let tzoffset = (new Date()).getTimezoneOffset() * 60000; 
+    let localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -8);
+    return localISOTime ;
+} 
+
+function setCurrentURLAsDefValue(){
+    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs){ 
+        document.querySelector('.url').value = tabs[0].url;
+    });
+}
+
+
+function setDefaultTime(){
+    document.querySelectorAll('.date').forEach(function(item){
+        item.value = formatDateTimeValue();
+    });
+}
 
 document.querySelectorAll('.saveUrl').forEach(function(item){
     item.addEventListener('click', function(){
-        let key = this.dataset.key;
-        getAlarmNotifications(key);
+        let siblings = this.parentNode.children;
+        let newKey = parseInt(this.dataset.key) + 1;
+
+        let params = {}
+        params.key = this.dataset.key;
+        params.url = siblings[0].value;
+        params.time = siblings[1].value;
+        
+        getAlarmNotifications(params);
+        addNewEntry(newKey);
     });
     item.addEventListener('click', trackButton);
 });
 
-document.querySelectorAll('.url').forEach(function(item){
-    let alarmUrl = 'url' + item.dataset.key;
-    item.value = localStorage.getItem(alarmUrl);
-});
-
-
-document.querySelectorAll('.date').forEach(function(item){
-    let  alarmTime = 'time' + item.dataset.key;
-    if (localStorage.getItem(alarmTime)){
-        item.value = localStorage.getItem(alarmTime);
-    }else{
-        item.value = formatDateTimeValue();
-    } 
-});
+function addNewEntry(newKey){
+    document.querySelector('.item'+newKey.toString()).style.display = 'block';
+    setDefaultTime();
+} 
 
 
 function getTimeDiff(time){
@@ -57,32 +78,41 @@ function setAlarm(url, minutes, key){
 
     chrome.storage.sync.set(urlObj , function(){return});
     chrome.alarms.create(alarmName, {delayInMinutes: minutes});
-    window.close();
+    // window.close();
 }
 
 
-function formatDateTimeValue(){ 
-    let tzoffset = (new Date()).getTimezoneOffset() * 60000; 
-    let localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -8);
-    return localISOTime ;
-} 
 
-function getAlarmNotifications(key){
-        let alarmUrl = 'url' + key;
-        let alarmTime = 'time'+ key;
+function getAlarmNotifications(params){
+    if(params.url && params.time){
+            let key = params.key;
+            let alarmUrl = 'url' + key;
+            let alarmTime = 'time'+ key;
+            let minutes = getTimeDiff(params.time);
 
-        let readingTime = document.querySelector('.dateTime'+ key).value;
-        let articleUrl = document.querySelector('.urlInput' + key).value;
-
-        if (readingTime === "" || articleUrl === ""){
-            alert('URL field is empty, please add your URL and try again.');
-        }
-        else{
-            let minutes = getTimeDiff(readingTime);
-            localStorage.setItem(alarmUrl, articleUrl);
-            localStorage.setItem(alarmTime, readingTime);
-            setAlarm(articleUrl, minutes, key);
+            let itemInfo = {}
+            itemInfo['item'+key] = {}
+            itemInfo['item'+key].url = params.url;
+            itemInfo['item'+key].time = params.time;
+            chrome.storage.sync.set(itemInfo, function(){
+                return
+            }); 
+            localStorage.setItem(alarmUrl, params.url);
+            localStorage.setItem(alarmTime, params.time);
+            setAlarm(params.url, minutes, key);
 
         }
 } 
+
+function init(){
+    setCurrentURLAsDefValue();
+    setDefaultTime();
+    // chrome.storage.sync.get('item1', function(item){ 
+    //     console.log(item);
+    //     document.querySelector('.item1 .url').value = item[0].url;
+    //     document.querySelector('.item1 .date').value = item[0].time; 
+   //  });
+} 
+
+document.addEventListener('DOMContentLoaded', init);
 
