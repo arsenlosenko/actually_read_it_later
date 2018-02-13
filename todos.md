@@ -14,6 +14,7 @@
    - show available articles on reading time
    - open new tab as time comes
    - send notification only
+ * verify added URL
 
 
 ## DOING:
