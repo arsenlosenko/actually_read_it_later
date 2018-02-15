@@ -5,7 +5,6 @@
 'use strict';
 
 let alarmName = "";
-let alarmTime = "";
 
 function formatNotificationMessage(url){
     let phrases = [
@@ -20,7 +19,6 @@ function formatNotificationMessage(url){
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
     alarmName = alarm.name; 
-    alarmTime = 'time'+alarmName.slice(-1);
 
     chrome.storage.sync.get(alarmName,function(item){
          chrome.notifications.create({
@@ -34,14 +32,11 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
             priority: 2});
     });
     
-    localStorage.removeItem(alarmName);
-    localStorage.removeItem(alarmTime);
     });
 
 chrome.notifications.onButtonClicked.addListener(function(notificationID, buttonIndex) {
-      chrome.storage.sync.get(function(items) {
-            chrome.storage.sync.get(alarmName, function(item){
-                chrome.tabs.create({url: item[alarmName]});
-        });
-      });
+    chrome.storage.sync.get(alarmName, function(item){
+        chrome.tabs.create({url: item[alarmName].url});
+  });
+     chrome.storage.sync.clear(function(){return});
 });

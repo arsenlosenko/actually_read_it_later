@@ -46,7 +46,7 @@ $('.setAlarm').click(function(){
                 chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
             }); 
 
-            addNewEntryAfterSave(nextItemKey);
+            appendEntry(nextItemKey);
         }
 });
 
@@ -64,16 +64,6 @@ function setCurrentURLForEmptyInput(){
     });
 }
 
-function addNewEntryAfterSave(newKey){
-    let itemSelector = `.item${newKey}`;
-    document.querySelector(itemSelector).style.display = 'block';
-    setDefaultTime(itemSelector);
-} 
-
-function setDefaultTime(itemSelector='.item1'){
-    document.querySelector(`${itemSelector} .date`).value = formatDateTimeValue();
-}
-
 
 function getTimeDiff(time){
     let dateNow = new Date();
@@ -82,19 +72,41 @@ function getTimeDiff(time){
     return diffMinutes;
 }
 
+function appendEntry(itemNum, item=""){
+     if(item === ""){ 
+        item = {};
+        item.url = "";
+        item.time = formatDateTimeValue();
+     }
+     console.log(item);
+
+      let entryHTML = `
+                    <li class="list-group-item ${itemNum}">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <input class="url form-control" type="text" placeholder="Enter URL here", value=${item.url}>
+                                    <input class="date form-control" type="datetime-local" value=${item.time} >
+                                    <button class="btn btn-success setAlarm" data-key="${itemNum}">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+        `
+      console.log(entryHTML);
+      $('.list-group').append(entryHTML.toString());
+} 
 
 function init(){
    let itemNames = ['item1','item2','item3','item4','item5'];
    chrome.storage.sync.get(itemNames, function(items){
       $.each(items, function(index, item){
-        let itemNum = index + 1;
-        $(`.item${itemNum} .url`).value = item.url;
-        $(`.item${itemNum} .date`).value = item.time;
+        appendEntry(index.slice(-1), item);
       });
     });
 
    setCurrentURLForEmptyInput();
-   setDefaultTime();
+   $('.date').val(formatDateTimeValue());
 
 } 
 

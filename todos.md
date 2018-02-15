@@ -23,3 +23,4 @@
  * refactor to use only `chrome.storage.sync` instead of localStorage, so extension data could be synced between devices (see this: https://developer.chrome.com/extensions/options)
  * remove all empty text inputs except one, add new when hitting `Save`
  * paste current page URL in first text entry by default
+ * rendering of saved URLs
