@@ -25,6 +25,7 @@ document.getElementById('shareLink').addEventListener('click', trackButton);
 // end of google analytics setup
 
 $('.setAlarm').click(function(){
+    // TODO: simplify this funciton
         let currentItemKey = this.dataset.key
         let nextItemKey = +currentItemKey + 1;
         let itemStorageKey = `item${currentItemKey}`
@@ -57,7 +58,7 @@ function formatDateTimeValue(){
     return localISOTime 
 } 
 
-function setCurrentURLAsDefaultValue(){
+function setCurrentURLForEmptyInput(){
     chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs){ 
         document.querySelector('.url').value = tabs[0].url;
     });
@@ -83,8 +84,18 @@ function getTimeDiff(time){
 
 
 function init(){
-       setCurrentURLAsDefaultValue();
-       setDefaultTime();
+   let itemNames = ['item1','item2','item3','item4','item5'];
+   chrome.storage.sync.get(itemNames, function(items){
+      $.each(items, function(index, item){
+        let itemNum = index + 1;
+        $(`.item${itemNum} .url`).value = item.url;
+        $(`.item${itemNum} .date`).value = item.time;
+      });
+    });
+
+   setCurrentURLForEmptyInput();
+   setDefaultTime();
+
 } 
 
 document.addEventListener('DOMContentLoaded', init);
