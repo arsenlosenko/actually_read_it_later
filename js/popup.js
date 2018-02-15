@@ -32,15 +32,19 @@ $('.setAlarm').click(function(){
         let siblings = this.parentNode.children;
         let itemUrl = siblings[0].value;
         let itemTime = siblings[1].value;
+        let minutes = getTimeDiff(itemTime); 
+
         let itemInfo = {};
         itemInfo[itemStorageKey] = {};
 
         if (itemUrl && itemTime){
-            console.log(itemInfo);
             itemInfo[itemStorageKey].url = itemUrl;
             itemInfo[itemStorageKey].time = itemTime 
-            
-            getAlarmNotifications(currentItemKey, itemInfo);
+
+            chrome.storage.sync.set(itemInfo, function(){
+                chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
+            }); 
+
             addNewEntryAfterSave(nextItemKey);
         }
 });
@@ -77,30 +81,6 @@ function getTimeDiff(time){
     return diffMinutes;
 }
 
-function setAlarm(url, minutes, key){
-    let alarmName = 'url'+key;
-    let urlObj = {};
-    urlObj[alarmName] = url;
-
-    chrome.storage.sync.set(urlObj , function(){return});
-    chrome.alarms.create(alarmName, {delayInMinutes: minutes});
-    // window.close();
-}
-
-
-
-function getAlarmNotifications(itemKey, itemInfo){
-    let alarmUrl = `url${itemKey}`;
-    let alarmTime = `time${itemKey}`;
-    let minutes = getTimeDiff(itemInfo[`item${itemKey}`].time);
-
-    chrome.storage.sync.set(itemInfo, function(){
-        return
-    }); 
-    localStorage.setItem(alarmUrl, itemInfo[`item${itemKey}`].url);
-    localStorage.setItem(alarmTime, itemInfo[`item${itemKey}`].time);
-    setAlarm(itemInfo[`item${itemKey}`].url , minutes, itemKey);
-} 
 
 function init(){
        setCurrentURLAsDefaultValue();

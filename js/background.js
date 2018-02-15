@@ -4,7 +4,7 @@
 
 'use strict';
 
-let alarmUrl = "";
+let alarmName = "";
 let alarmTime = "";
 
 function formatNotificationMessage(url){
@@ -19,29 +19,29 @@ function formatNotificationMessage(url){
 }
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
-    alarmUrl = alarm.name; 
-    alarmTime = 'time'+alarmUrl.slice(-1);
+    alarmName = alarm.name; 
+    alarmTime = 'time'+alarmName.slice(-1);
 
-    chrome.storage.sync.get(alarmUrl,function(item){
+    chrome.storage.sync.get(alarmName,function(item){
          chrome.notifications.create({
              type:     'basic',
              iconUrl:  '../img/notebook256.png',
              title:    'Time to read!',
-             message:   formatNotificationMessage(item[alarmUrl]),
+             message:   formatNotificationMessage(item[alarmName].url),
              buttons: [
                  {title: 'Read Now'},
             ],
             priority: 2});
     });
     
-    localStorage.removeItem(alarmUrl);
+    localStorage.removeItem(alarmName);
     localStorage.removeItem(alarmTime);
     });
 
 chrome.notifications.onButtonClicked.addListener(function(notificationID, buttonIndex) {
       chrome.storage.sync.get(function(items) {
-            chrome.storage.sync.get(alarmUrl, function(item){
-                chrome.tabs.create({url: item[alarmUrl]});
+            chrome.storage.sync.get(alarmName, function(item){
+                chrome.tabs.create({url: item[alarmName]});
         });
       });
 });
