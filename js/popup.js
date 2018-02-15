@@ -25,16 +25,24 @@ document.getElementById('shareLink').addEventListener('click', trackButton);
 // end of google analytics setup
 
 $('.setAlarm').click(function(){
-        let siblings = this.parentNode.children;
-        let newKey = parseInt(this.dataset.key) + 1;
+        let currentItemKey = this.dataset.key
+        let nextItemKey = +currentItemKey + 1;
+        let itemStorageKey = `item${currentItemKey}`
 
-        let params = {}
-        params.key = this.dataset.key;
-        params.url = siblings[0].value;
-        params.time = siblings[1].value;
-        
-        getAlarmNotifications(params);
-        addNewEntryAfterSave(newKey);
+        let siblings = this.parentNode.children;
+        let itemUrl = siblings[0].value;
+        let itemTime = siblings[1].value;
+        let itemInfo = {};
+        itemInfo[itemStorageKey] = {};
+
+        if (itemUrl && itemTime){
+            console.log(itemInfo);
+            itemInfo[itemStorageKey].url = itemUrl;
+            itemInfo[itemStorageKey].time = itemTime 
+            
+            getAlarmNotifications(currentItemKey, itemInfo);
+            addNewEntryAfterSave(nextItemKey);
+        }
 });
 
 $('.setAlarm').click(trackButton);
@@ -81,35 +89,22 @@ function setAlarm(url, minutes, key){
 
 
 
-function getAlarmNotifications(params){
-    if(params.url && params.time){
-            let key = params.key;
-            let alarmUrl = 'url' + key;
-            let alarmTime = 'time'+ key;
-            let minutes = getTimeDiff(params.time);
+function getAlarmNotifications(itemKey, itemInfo){
+    let alarmUrl = `url${itemKey}`;
+    let alarmTime = `time${itemKey}`;
+    let minutes = getTimeDiff(itemInfo[`item${itemKey}`].time);
 
-            let itemInfo = {}
-            itemInfo['item'+key] = {}
-            itemInfo['item'+key].url = params.url;
-            itemInfo['item'+key].time = params.time;
-            chrome.storage.sync.set(itemInfo, function(){
-                return
-            }); 
-            localStorage.setItem(alarmUrl, params.url);
-            localStorage.setItem(alarmTime, params.time);
-            setAlarm(params.url, minutes, key);
-
-        }
+    chrome.storage.sync.set(itemInfo, function(){
+        return
+    }); 
+    localStorage.setItem(alarmUrl, itemInfo[`item${itemKey}`].url);
+    localStorage.setItem(alarmTime, itemInfo[`item${itemKey}`].time);
+    setAlarm(itemInfo[`item${itemKey}`].url , minutes, itemKey);
 } 
 
 function init(){
-    setCurrentURLAsDefaultValue();
-    setDefaultTime();
-   chrome.storage.sync.get('item1', function(item){ 
-         console.log(item);
-         document.querySelector('.item1 .url').value = item[0].url;
-         document.querySelector('.item1 .date').value = item[0].time; 
-    });
+       setCurrentURLAsDefaultValue();
+       setDefaultTime();
 } 
 
 document.addEventListener('DOMContentLoaded', init);
