@@ -12,6 +12,7 @@
    - open new tab as time comes
    - send notification only
  * verify added URL
+ * add remove alarm option
 
 
 ## DOING:

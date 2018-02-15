@@ -5,6 +5,7 @@
 'use strict';
 
 // google analytics setup 
+
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-92437551-1']);
 _gaq.push(['_trackPageview']);
@@ -20,30 +21,10 @@ function trackButton(e) {
 };
 
 document.getElementById('shareLink').addEventListener('click', trackButton);
+
 // end of google analytics setup
 
-
-function formatDateTimeValue(){ 
-    let tzoffset = (new Date()).getTimezoneOffset() * 60000; 
-    let localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -8);
-    return localISOTime ;
-} 
-
-function setCurrentURLAsDefValue(){
-    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs){ 
-        document.querySelector('.url').value = tabs[0].url;
-    });
-}
-
-
-function setDefaultTime(){
-    document.querySelectorAll('.date').forEach(function(item){
-        item.value = formatDateTimeValue();
-    });
-}
-
-document.querySelectorAll('.saveUrl').forEach(function(item){
-    item.addEventListener('click', function(){
+$('.setAlarm').click(function(){
         let siblings = this.parentNode.children;
         let newKey = parseInt(this.dataset.key) + 1;
 
@@ -53,15 +34,32 @@ document.querySelectorAll('.saveUrl').forEach(function(item){
         params.time = siblings[1].value;
         
         getAlarmNotifications(params);
-        addNewEntry(newKey);
-    });
-    item.addEventListener('click', trackButton);
+        addNewEntryAfterSave(newKey);
 });
 
-function addNewEntry(newKey){
-    document.querySelector('.item'+newKey.toString()).style.display = 'block';
-    setDefaultTime();
+$('.setAlarm').click(trackButton);
+
+function formatDateTimeValue(){ 
+    let tzoffset = (new Date()).getTimezoneOffset() * 60000; 
+    let localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -8);
+    return localISOTime 
 } 
+
+function setCurrentURLAsDefaultValue(){
+    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs){ 
+        document.querySelector('.url').value = tabs[0].url;
+    });
+}
+
+function addNewEntryAfterSave(newKey){
+    let itemSelector = `.item${newKey}`;
+    document.querySelector(itemSelector).style.display = 'block';
+    setDefaultTime(itemSelector);
+} 
+
+function setDefaultTime(itemSelector='.item1'){
+    document.querySelector(`${itemSelector} .date`).value = formatDateTimeValue();
+}
 
 
 function getTimeDiff(time){
@@ -105,13 +103,13 @@ function getAlarmNotifications(params){
 } 
 
 function init(){
-    setCurrentURLAsDefValue();
+    setCurrentURLAsDefaultValue();
     setDefaultTime();
-    // chrome.storage.sync.get('item1', function(item){ 
-    //     console.log(item);
-    //     document.querySelector('.item1 .url').value = item[0].url;
-    //     document.querySelector('.item1 .date').value = item[0].time; 
-   //  });
+   chrome.storage.sync.get('item1', function(item){ 
+         console.log(item);
+         document.querySelector('.item1 .url').value = item[0].url;
+         document.querySelector('.item1 .date').value = item[0].time; 
+    });
 } 
 
 document.addEventListener('DOMContentLoaded', init);
