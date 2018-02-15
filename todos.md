@@ -17,6 +17,7 @@
 
 ## DOING:
  * refactor to use only `chrome.storage.sync` instead of localStorage, so extension data could be synced between devices (see this: https://developer.chrome.com/extensions/options)
+ * after installation ask user about default reading time
 
 
 
