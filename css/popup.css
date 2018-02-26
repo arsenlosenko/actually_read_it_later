@@ -46,6 +46,11 @@ input[type=datetime-local] {
     border-radius: 0px 4px 4px 0px;
 }
 
+.btn-danger {
+    border-radius: 0px 4px 4px 0px;
+    padding: 9px 12px 9px 12px;
+}
+
 .btn-success:hover,
 .btn-success:focus,
 .btn-success:active {

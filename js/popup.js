@@ -46,11 +46,6 @@ function formatDataAndAddEntry(){
             chrome.storage.sync.set(itemInfo, function(){
                 chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
             }); 
-
-            $(this).text("-");
-            $(this).removeClass("btn-success setAlarm");
-            $(this).addClass("btn-danger removeAlarm");
-
             appendEntry(nextItemKey);
         }
 }
@@ -87,15 +82,15 @@ function appendEntry(itemNum, item=""){
                                 <div class="input-group-prepend">
                                     <input class="url form-control" type="text" placeholder="Enter URL here", value=${item.url}>
                                     <input class="date form-control" type="datetime-local" value=${item.time} >
-                                    <button class="btn btn-success setAlarm" data-key="${itemNum}">+</button>
+                                    <button class="btn btn-danger removeAlarm" data-key="${itemNum}"> 
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </li>
         `
     $('.list-group').append(entryHTML.toString());
-    $('.setAlarm').click(formatDataAndAddEntry);
-    $('.setAlarm').click(trackButton);
 } 
 
 function init(){
@@ -109,8 +104,9 @@ function init(){
 
     setCurrentURLForEmptyInput();
     $('.date').val(formatDateTimeValue());
-    $('.setAlarm').click(formatDataAndAddEntry);
-    $('.setAlarm').click(trackButton);
+    $('.removeAlarm').click(function(){
+        $(this).remove("li.item"+this.dataset.key);
+    });
 
 } 
 
