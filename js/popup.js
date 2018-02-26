@@ -82,7 +82,7 @@ function appendEntry(itemNum, item=""){
      }
       let entryHTML = `
                     <li class="list-group-item item${itemNum}">
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-lg-12">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <input class="url form-control" type="text" placeholder="Enter URL here", value=${item.url}>
@@ -105,6 +105,7 @@ function init(){
         appendEntry(index.slice(-1), item);
       });
     });
+
 
     setCurrentURLForEmptyInput();
     $('.date').val(formatDateTimeValue());
