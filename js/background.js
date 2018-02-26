@@ -40,3 +40,9 @@ chrome.notifications.onButtonClicked.addListener(function(notificationID, button
   });
      chrome.storage.sync.clear(function(){return});
 });
+
+chrome.runtime.onInstalled.addListener(function(details){
+    if(details.reason == "install"){
+        chrome.runtime.openOptionsPage(function(){return})
+    }
+});

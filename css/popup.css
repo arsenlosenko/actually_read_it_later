@@ -14,7 +14,7 @@ body {
 }
 
 
-input[type=datetime-local] {
+input[type=datetime-local]{
     height: 34px;
     padding: 6px 12px;
     font-size: 14px;
@@ -27,6 +27,20 @@ input[type=datetime-local] {
     text-transform: uppercase;
     outline: none;
     background: #fff url("../img/calendar_2.png") 97% 50% no-repeat;
+}
+
+input[type=time]{
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0 auto;
+    width: 120px;
+    text-transform: uppercase;
+    outline: none;
 }
 
 .col-md-6 {
