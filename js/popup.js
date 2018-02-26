@@ -24,7 +24,8 @@ document.getElementById('shareLink').addEventListener('click', trackButton);
 
 // end of google analytics setup
 
-$('.setAlarm').click(function(){
+
+function formatDataAndAddEntry(){
     // TODO: simplify this funciton
         let currentItemKey = this.dataset.key
         let nextItemKey = +currentItemKey + 1;
@@ -48,10 +49,7 @@ $('.setAlarm').click(function(){
 
             appendEntry(nextItemKey);
         }
-});
-
-$('.setAlarm').click(trackButton);
-
+}
 function formatDateTimeValue(){ 
     let tzoffset = (new Date()).getTimezoneOffset() * 60000; 
     let localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -8);
@@ -78,10 +76,8 @@ function appendEntry(itemNum, item=""){
         item.url = "";
         item.time = formatDateTimeValue();
      }
-     console.log(item);
-
       let entryHTML = `
-                    <li class="list-group-item ${itemNum}">
+                    <li class="list-group-item item${itemNum}">
                         <div class="col-md-6">
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -93,8 +89,9 @@ function appendEntry(itemNum, item=""){
                         </div>
                     </li>
         `
-      console.log(entryHTML);
-      $('.list-group').append(entryHTML.toString());
+    $('.list-group').append(entryHTML.toString());
+    $('.setAlarm').click(formatDataAndAddEntry);
+    $('.setAlarm').click(trackButton);
 } 
 
 function init(){
@@ -105,8 +102,10 @@ function init(){
       });
     });
 
-   setCurrentURLForEmptyInput();
-   $('.date').val(formatDateTimeValue());
+    setCurrentURLForEmptyInput();
+    $('.date').val(formatDateTimeValue());
+    $('.setAlarm').click(formatDataAndAddEntry);
+    $('.setAlarm').click(trackButton);
 
 } 
 
