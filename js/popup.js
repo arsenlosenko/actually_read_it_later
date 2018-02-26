@@ -47,6 +47,10 @@ function formatDataAndAddEntry(){
                 chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
             }); 
 
+            $(this).text("-");
+            $(this).removeClass("btn-success setAlarm");
+            $(this).addClass("btn-danger removeAlarm");
+
             appendEntry(nextItemKey);
         }
 }
