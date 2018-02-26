@@ -24,42 +24,11 @@ document.getElementById('shareLink').addEventListener('click', trackButton);
 
 // end of google analytics setup
 
-
-function formatDataAndAddEntry(){
-    // TODO: simplify this funciton
-        let currentItemKey = this.dataset.key
-        let nextItemKey = +currentItemKey + 1;
-        let itemStorageKey = `item${currentItemKey}`
-
-        let siblings = this.parentNode.children;
-        let itemUrl = siblings[0].value;
-        let itemTime = siblings[1].value;
-        let minutes = getTimeDiff(itemTime); 
-
-        let itemInfo = {};
-        itemInfo[itemStorageKey] = {};
-
-        if (itemUrl && itemTime){
-            itemInfo[itemStorageKey].url = itemUrl;
-            itemInfo[itemStorageKey].time = itemTime 
-
-            chrome.storage.sync.set(itemInfo, function(){
-                chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
-            }); 
-            appendEntry(nextItemKey);
-        }
-}
 function formatDateTimeValue(){ 
     let tzoffset = (new Date()).getTimezoneOffset() * 60000; 
     let localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -8);
     return localISOTime 
 } 
-
-function setCurrentURLForEmptyInput(){
-    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs){ 
-        document.querySelector('.url').value = tabs[0].url;
-    });
-}
 
 
 function getTimeDiff(time){
@@ -69,12 +38,7 @@ function getTimeDiff(time){
     return diffMinutes;
 }
 
-function appendEntry(itemNum, item=""){
-     if(item === ""){ 
-        item = {};
-        item.url = "";
-        item.time = formatDateTimeValue();
-     }
+function appendEntry(itemNum, item){
       let entryHTML = `
                     <li class="list-group-item item${itemNum}">
                         <div class="col-md-6 col-lg-12">
@@ -93,20 +57,37 @@ function appendEntry(itemNum, item=""){
     $('.list-group').append(entryHTML.toString());
 } 
 
+
 function init(){
-   let itemNames = ['item1','item2','item3','item4','item5'];
-   chrome.storage.sync.get(itemNames, function(items){
-      $.each(items, function(index, item){
-        appendEntry(index.slice(-1), item);
-      });
-    });
+        let firstItemKey = 1;
+        let nextItemKey = firstItemKey + 1;
+        let itemStorageKey = `item${firstItemKey}`;
 
+        let itemTime = formatDateTimeValue();
+        let minutes = getTimeDiff(itemTime); 
 
-    setCurrentURLForEmptyInput();
-    $('.date').val(formatDateTimeValue());
-    $('.removeAlarm').click(function(){
-        $(this).remove("li.item"+this.dataset.key);
-    });
+        chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs){ 
+            let itemUrl = tabs[0].url;
+            let itemInfo = {};
+            itemInfo[itemStorageKey] = {};
+
+            itemInfo[itemStorageKey].url = itemUrl;
+            itemInfo[itemStorageKey].time = itemTime 
+
+            chrome.storage.sync.set(itemInfo, function(){
+                chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
+            }); 
+        });
+        
+       chrome.storage.sync.get(function(items){
+          $.each(items, function(index, item){
+            appendEntry(index.slice(-1), item);
+          });
+        });
+
+        $('.removeAlarm').click(function(){
+            $(this).remove("li.item"+this.dataset.key);
+        });
 
 } 
 
