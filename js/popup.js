@@ -4,26 +4,17 @@
 
 'use strict';
 
-// google analytics setup 
+$('removeAlarm').click(function(){
+    console.log(this);
+});
 
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-92437551-1']);
-_gaq.push(['_trackPageview']);
+function onContextClick(info, tab){
+    console.log("tab " + JSON.stringify(tab));
+    console.log("info " + info);
+}
 
-(function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = 'https://ssl.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-            
-function trackButton(e) {
-    _gaq.push(['_trackEvent', e.target.id, 'clicked']);
-};
-
-document.getElementById('shareLink').addEventListener('click', trackButton);
-
-// end of google analytics setup
-
+chrome.contextMenus.create({"title": "Actually read it later", "contexts": ["link"], "id": "123"});
+chrome.contextMenus.onClicked.addListener(onContextClick);
 function formatDateTimeValue(){ 
     let tzoffset = (new Date()).getTimezoneOffset() * 60000; 
     let localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -8);
@@ -87,17 +78,5 @@ function init(){
     renderItems();
 } 
 
-
 document.addEventListener('DOMContentLoaded', init);
 
-$('removeAlarm').click(function(){
-    console.log(this);
-});
-
-function onContextClick(info, tab){
-    console.log("tab " + JSON.stringify(tab));
-    console.log("info " + info);
-}
-
-chrome.contextMenus.create({"title": "Actually read it later", "contexts": ["link"], "id": "123"});
-chrome.contextMenus.onClicked.addListener(onContextClick);
