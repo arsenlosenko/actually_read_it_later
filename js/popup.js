@@ -57,6 +57,11 @@ function appendEntry(itemNum, item){
     $('.list-group').append(entryHTML.toString());
 } 
 
+$('.removeAlarm').click(function(){
+    chrome.storage.sync.remove("item"+this.dataset.key, function(){
+        $(this).remove("li.item"+this.dataset.key);
+    });
+});
 
 function init(){
         let firstItemKey = 1;
@@ -85,11 +90,16 @@ function init(){
           });
         });
 
-        $('.removeAlarm').click(function(){
-            $(this).remove("li.item"+this.dataset.key);
-        });
 
 } 
 
 document.addEventListener('DOMContentLoaded', init);
 
+
+function onContextClick(info, tab){
+    console.log("tab " + JSON.stringify(tab));
+    console.log("info " + info);
+}
+
+chrome.contextMenus.create({"title": "Actually read it later", "contexts": ["link"], "id": "123"});
+chrome.contextMenus.onClicked.addListener(onContextClick);
