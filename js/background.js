@@ -17,10 +17,10 @@ function formatNotificationMessage(url){
     return phrases[randIndex] 
 }
 
-chrome.alarms.onAlarm.addListener(function(alarm) {
+chrome.alarms.onAlarm.addListener((alarm) =>  {
     alarmName = alarm.name; 
 
-    chrome.storage.sync.get(alarmName,function(item){
+    chrome.storage.sync.get(alarmName,(item) => {
          chrome.notifications.create({
              type:     'basic',
              iconUrl:  '../img/notebook256.png',
@@ -34,15 +34,15 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
     
     });
 
-chrome.notifications.onButtonClicked.addListener(function(notificationID, buttonIndex) {
-    chrome.storage.sync.get(alarmName, function(item){
+chrome.notifications.onButtonClicked.addListener((notificationID, buttonIndex) => {
+    chrome.storage.sync.get(alarmName, (item) => {
         chrome.tabs.create({url: item[alarmName].url});
   });
-     chrome.storage.sync.clear(function(){return});
+     chrome.storage.sync.clear(() => {return});
 });
 
-chrome.runtime.onInstalled.addListener(function(details){
+chrome.runtime.onInstalled.addListener((details) => {
     if(details.reason == "install"){
-        chrome.runtime.openOptionsPage(function(){return})
+        chrome.runtime.openOptionsPage(() =>{return})
     }
 });

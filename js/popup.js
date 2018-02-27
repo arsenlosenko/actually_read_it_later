@@ -57,44 +57,42 @@ function appendEntry(itemNum, item){
     $('.list-group').append(entryHTML.toString());
 } 
 
-$('.removeAlarm').click(function(){
-    chrome.storage.sync.remove("item"+this.dataset.key, function(){
-        $(this).remove("li.item"+this.dataset.key);
+function renderItems(){
+   chrome.storage.sync.get((items) => {
+      $.each(items, (index, item) => {
+        appendEntry(index.slice(-1), item);
+      });
     });
-});
+} 
 
 function init(){
-        let firstItemKey = 1;
-        let nextItemKey = firstItemKey + 1;
-        let itemStorageKey = `item${firstItemKey}`;
+    let firstItemKey = 1;
+    let nextItemKey = firstItemKey + 1;
+    let itemStorageKey = `item${firstItemKey}`;
 
-        let itemTime = formatDateTimeValue();
-        let minutes = getTimeDiff(itemTime); 
+    let itemTime = formatDateTimeValue();
+    let minutes = getTimeDiff(itemTime); 
 
-        chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs){ 
-            let itemUrl = tabs[0].url;
-            let itemInfo = {};
-            itemInfo[itemStorageKey] = {};
+    let itemInfo = {};
+    itemInfo[itemStorageKey] = {};
+    itemInfo[itemStorageKey].time = itemTime;
 
-            itemInfo[itemStorageKey].url = itemUrl;
-            itemInfo[itemStorageKey].time = itemTime 
+    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, (tabs)=>{ 
+        itemInfo[itemStorageKey].url = tabs[0].url;
+        chrome.storage.sync.set(itemInfo, ()=>{
+            chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
+        }); 
+    });
 
-            chrome.storage.sync.set(itemInfo, function(){
-                chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
-            }); 
-        });
-        
-       chrome.storage.sync.get(function(items){
-          $.each(items, function(index, item){
-            appendEntry(index.slice(-1), item);
-          });
-        });
-
-
+    renderItems();
 } 
+
 
 document.addEventListener('DOMContentLoaded', init);
 
+$('removeAlarm').click(function(){
+    console.log(this);
+});
 
 function onContextClick(info, tab){
     console.log("tab " + JSON.stringify(tab));
