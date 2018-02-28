@@ -19,7 +19,6 @@ function appendEntry(itemNum, item){
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <input class="url form-control" type="text" placeholder="Enter URL here", value=${item.url}>
-                                    <input class="date form-control" type="time" value=${item.time} >
                                     <button class="btn btn-danger removeAlarm" data-key="${itemNum}"> 
                                         <i class="fa fa-times" data-key="${itemNum}"></i>
                                     </button>

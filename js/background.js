@@ -4,47 +4,8 @@
 
 'use strict';
 
-let alarmName = "";
-
-function formatNotificationMessage(url){
-    let phrases = [
-        `Here is your saved article:\n\n${url}\n\nHappy reading!`,
-        `Another article delivered for you!\n\n${url}\n\nEnjoy!`,
-        `Ring ring! Time to read!\n\n${url}`,
-        `There you go, another fine article!\n\n${url}`
-    ]
-    let randIndex = Math.floor(Math.random() * phrases.length);
-    return phrases[randIndex] 
-}
-
-function getItemInfo(item){
-    return item.name === alarmName;
-}
-
 chrome.alarms.onAlarm.addListener((alarm) =>  {
-    alarmName = alarm.name; 
-    console.log(alarmName);
-    chrome.tabs.create({url: '/popup.html'})
-   // chrome.storage.sync.get('items',(item) => {
-   //     let alarmInfo = item['items'].find(getItemInfo);
-   //     chrome.notifications.create({
-   //          type:     'basic',
-   //          iconUrl:  '../img/notebook256.png',
-   //          title:    'Time to read!',
-   //          message:   formatNotificationMessage(alarmInfo.url),
-   //          buttons: [
-   //              {title: 'Read Now'},
-   //         ],
-   //         priority: 2});
-   // });
-    
-    });
-
-chrome.notifications.onButtonClicked.addListener((notificationID, buttonIndex) => {
-    chrome.storage.sync.get(alarmName, (item) => {
-        chrome.tabs.create({url: item[alarmName].url});
-  });
-     chrome.storage.sync.clear(() => {return});
+    chrome.tabs.create({url: '/popup.html'});
 });
 
 chrome.runtime.onInstalled.addListener((details) => {
