@@ -16,20 +16,6 @@ function onContextClick(info, tab){
 chrome.contextMenus.create({"title": "Actually read it later", "contexts": ["link"], "id": "123"});
 chrome.contextMenus.onClicked.addListener(onContextClick);
 
-function formatDateTimeValue(){ 
-    let tzoffset = (new Date()).getTimezoneOffset() * 60000; 
-    let localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -8);
-    return localISOTime 
-} 
-
-
-function getTimeDiff(time){
-    let dateNow = new Date();
-    let enteredDate = new Date(time);
-    let diffMinutes = Math.ceil((enteredDate.getTime() - dateNow.getTime()) / 60000);
-    return diffMinutes;
-}
-
 function appendEntry(itemNum, item){
       let entryHTML = `
                     <li class="list-group-item item${itemNum}">
@@ -37,7 +23,7 @@ function appendEntry(itemNum, item){
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <input class="url form-control" type="text" placeholder="Enter URL here", value=${item.url}>
-                                    <input class="date form-control" type="datetime-local" value=${item.time} >
+                                    <input class="date form-control" type="time" value=${item.time} >
                                     <button class="btn btn-danger removeAlarm" data-key="${itemNum}"> 
                                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                     </button>
@@ -52,7 +38,6 @@ function appendEntry(itemNum, item){
 function renderItems(){
    chrome.storage.sync.get('items', (item) => {
       $.each(item['items'], (index, item) => {
-        console.log(index, item);
         appendEntry(index++, item);
       });
     });
@@ -66,23 +51,23 @@ function updateItems(itemObj){
 }
 
 function init(){
-    let firstItemKey = 1;
-    let nextItemKey = firstItemKey + 1;
-    let itemStorageKey = `item${firstItemKey}`;
+    renderItems();
+    chrome.storage.sync.get(['items', 'defaultTime'],  (storageItems) => {
+        let entries = storageItems.items;
+        let defaultTime = storageItems.defaultTime;
+        let itemInfo = {};
+        let itemsLength = entries.length;
+        let lastIndex = itemsLength - 1;
+        itemInfo.name = "item" + (itemsLength + 1);
+        itemInfo.time = defaultTime;
 
-    let itemTime = formatDateTimeValue();
-    let minutes = getTimeDiff(itemTime); 
-
-    let itemInfo = {};
-    itemInfo.time = itemTime;
-
-    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, (tabs)=>{ 
-        itemInfo.url = tabs[0].url;
-        chrome.storage.sync.set(itemInfo); 
-        chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
+        chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, (tabs)=>{ 
+            itemInfo.url = tabs[0].url;
+            updateItems(itemInfo);
+        });
     });
 
-    renderItems();
+    // chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
 } 
 
 document.addEventListener('DOMContentLoaded', init);
