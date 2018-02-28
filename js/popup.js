@@ -4,17 +4,13 @@
 
 'use strict';
 
-$('removeAlarm').click(function(){
-    console.log(this);
-});
-
 function onContextClick(info, tab){
-    console.log("tab " + JSON.stringify(tab));
-    console.log("info " + info);
+    addNewItem();
 }
 
-chrome.contextMenus.create({"title": "Actually read it later", "contexts": ["link"], "id": "123"});
+chrome.contextMenus.create({"title": "Actually read it later", "contexts": ["link"], "id": "aril"});
 chrome.contextMenus.onClicked.addListener(onContextClick);
+
 
 function appendEntry(itemNum, item){
       let entryHTML = `
@@ -25,7 +21,7 @@ function appendEntry(itemNum, item){
                                     <input class="url form-control" type="text" placeholder="Enter URL here", value=${item.url}>
                                     <input class="date form-control" type="time" value=${item.time} >
                                     <button class="btn btn-danger removeAlarm" data-key="${itemNum}"> 
-                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        <i class="fa fa-times" data-key="${itemNum}"></i>
                                     </button>
                                 </div>
                             </div>
@@ -38,10 +34,21 @@ function appendEntry(itemNum, item){
 function renderItems(){
    chrome.storage.sync.get('items', (item) => {
       $.each(item['items'], (index, item) => {
-        appendEntry(index++, item);
+        appendEntry(index + 1, item);
       });
     });
 } 
+
+function removeItem(itemName){
+    chrome.storage.sync.get('items', (item) => {
+        let allItems = item['items']; 
+        let foundItem = allItems.find((item) => {return item.name === itemName;});
+        let indexOfFoundItem = allItems.indexOf(foundItem);
+        let removedItem = allItems.splice(indexOfFoundItem, 1);
+        chrome.storage.sync.set({'items': allItems});
+    });
+}
+        
 
 function updateItems(itemObj){
     chrome.storage.sync.get('items', (item) => {
@@ -50,8 +57,7 @@ function updateItems(itemObj){
     });
 }
 
-function init(){
-    renderItems();
+function addNewItem(){
     chrome.storage.sync.get(['items', 'defaultTime'],  (storageItems) => {
         let entries = storageItems.items;
         let defaultTime = storageItems.defaultTime;
@@ -66,7 +72,19 @@ function init(){
             updateItems(itemInfo);
         });
     });
+}
 
+
+$(document).on('click', '.removeAlarm', (e) => {
+    let targetElem = e.target;
+    let itemKey = targetElem.dataset.key;
+    let itemName = "item"+itemKey;
+    removeItem(itemName);
+});
+
+function init(){
+    addNewItem();
+    renderItems();
     // chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
 } 
 

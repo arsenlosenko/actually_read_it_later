@@ -48,6 +48,7 @@ chrome.notifications.onButtonClicked.addListener((notificationID, buttonIndex) =
 
 chrome.runtime.onInstalled.addListener((details) => {
     if(details.reason == "install"){
-        chrome.runtime.openOptionsPage(() =>{return})
+        chrome.runtime.openOptionsPage(() =>{return});
+        chrome.storage.sync.set({'items':[]});
     }
 });
