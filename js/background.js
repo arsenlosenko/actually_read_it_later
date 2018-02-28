@@ -23,19 +23,20 @@ function getItemInfo(item){
 
 chrome.alarms.onAlarm.addListener((alarm) =>  {
     alarmName = alarm.name; 
-
-    chrome.storage.sync.get('items',(item) => {
-        let alarmInfo = item['items'].find(getItemInfo);
-        chrome.notifications.create({
-             type:     'basic',
-             iconUrl:  '../img/notebook256.png',
-             title:    'Time to read!',
-             message:   formatNotificationMessage(alarmInfo.url),
-             buttons: [
-                 {title: 'Read Now'},
-            ],
-            priority: 2});
-    });
+    console.log(alarmName);
+    chrome.tabs.create({url: '/popup.html'})
+   // chrome.storage.sync.get('items',(item) => {
+   //     let alarmInfo = item['items'].find(getItemInfo);
+   //     chrome.notifications.create({
+   //          type:     'basic',
+   //          iconUrl:  '../img/notebook256.png',
+   //          title:    'Time to read!',
+   //          message:   formatNotificationMessage(alarmInfo.url),
+   //          buttons: [
+   //              {title: 'Read Now'},
+   //         ],
+   //         priority: 2});
+   // });
     
     });
 

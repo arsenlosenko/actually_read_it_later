@@ -85,7 +85,6 @@ $(document).on('click', '.removeAlarm', (e) => {
 function init(){
     addNewItem();
     renderItems();
-    // chrome.alarms.create(itemStorageKey, {delayInMinutes: minutes});
 } 
 
 document.addEventListener('DOMContentLoaded', init);
