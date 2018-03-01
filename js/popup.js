@@ -4,6 +4,24 @@
 
 'use strict';
 
+$(document).on('click', '.removeAlarm', (e) => {
+    let targetElem = e.target;
+    let itemKey = targetElem.dataset.key;
+    let itemName = "item"+itemKey;
+    $("."+itemName).remove();
+    removeItem(itemName);
+});
+
+function removeItem(itemName){
+    chrome.storage.sync.get('items', (item) => {
+        let allItems = item['items']; 
+        let foundItem = allItems.find((item) => {return item.name === itemName;});
+        let indexOfFoundItem = allItems.indexOf(foundItem);
+        let removedItem = allItems.splice(indexOfFoundItem, 1);
+        chrome.storage.sync.set({'items': allItems});
+    });
+}
+
 function onContextClick(info, tab){
     addNewItem();
 }
@@ -11,6 +29,14 @@ function onContextClick(info, tab){
 chrome.contextMenus.create({"title": "Actually read it later", "contexts": ["link"], "id": "aril"});
 chrome.contextMenus.onClicked.addListener(onContextClick);
 
+
+function renderItems(){
+   chrome.storage.sync.get('items', (item) => {
+      $.each(item['items'], (index, item) => {
+        appendEntry(index + 1, item);
+      });
+    });
+} 
 
 function appendEntry(itemNum, item){
       let entryHTML = `
@@ -30,31 +56,6 @@ function appendEntry(itemNum, item){
     $('.list-group').append(entryHTML.toString());
 } 
 
-function renderItems(){
-   chrome.storage.sync.get('items', (item) => {
-      $.each(item['items'], (index, item) => {
-        appendEntry(index + 1, item);
-      });
-    });
-} 
-
-function removeItem(itemName){
-    chrome.storage.sync.get('items', (item) => {
-        let allItems = item['items']; 
-        let foundItem = allItems.find((item) => {return item.name === itemName;});
-        let indexOfFoundItem = allItems.indexOf(foundItem);
-        let removedItem = allItems.splice(indexOfFoundItem, 1);
-        chrome.storage.sync.set({'items': allItems});
-    });
-}
-        
-
-function updateItems(itemObj){
-    chrome.storage.sync.get('items', (item) => {
-        item['items'].push(itemObj);
-        chrome.storage.sync.set(item);
-    });
-}
 
 function addNewItem(){
     chrome.storage.sync.get(['items', 'defaultTime'],  (storageItems) => {
@@ -73,13 +74,12 @@ function addNewItem(){
     });
 }
 
-
-$(document).on('click', '.removeAlarm', (e) => {
-    let targetElem = e.target;
-    let itemKey = targetElem.dataset.key;
-    let itemName = "item"+itemKey;
-    removeItem(itemName);
-});
+function updateItems(itemObj){
+    chrome.storage.sync.get('items', (item) => {
+        item['items'].push(itemObj);
+        chrome.storage.sync.set(item);
+    });
+}
 
 function init(){
     addNewItem();
