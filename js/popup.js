@@ -4,7 +4,7 @@
 
 'use strict';
 
-$(document).on('click', '.removeAlarm', (e) => {
+$(document).on('click', '.removeItem', (e) => {
     let targetElem = e.target;
     let itemKey = targetElem.dataset.key;
     let itemName = "item"+itemKey;
@@ -45,7 +45,7 @@ function appendEntry(itemNum, item){
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <input class="url form-control" type="text" placeholder="Enter URL here", value=${item.url}>
-                                    <button class="btn btn-danger removeAlarm" data-key="${itemNum}"> 
+                                    <button class="btn btn-danger removeItem" data-key="${itemNum}"> 
                                         <i class="fa fa-times" data-key="${itemNum}"></i>
                                     </button>
                                 </div>
