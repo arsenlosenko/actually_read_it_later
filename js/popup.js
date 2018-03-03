@@ -40,7 +40,7 @@ function renderItems(){
 
 function appendEntry(itemNum, item){
       let entryHTML = `
-                        <div class="col-md-6 col-lg-12">
+                        <div class="col-md-12 col-lg-12">
                         <div class="panel panel-default item${itemNum}">
                             <div class="panel-body">
                                 <img height=16 width=16 class='favicon'/>
