@@ -40,21 +40,36 @@ function renderItems(){
 
 function appendEntry(itemNum, item){
       let entryHTML = `
-                    <li class="list-group-item item${itemNum}">
                         <div class="col-md-6 col-lg-12">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <input class="url form-control" type="text" placeholder="Enter URL here", value=${item.url}>
-                                    <button class="btn btn-danger removeItem" data-key="${itemNum}"> 
-                                        <i class="fa fa-times" data-key="${itemNum}"></i>
-                                    </button>
-                                </div>
+                        <div class="panel panel-default item${itemNum}">
+                            <div class="panel-body">
+                                <img height=16 width=16 class='favicon'/>
+                                <a href="${item.url}" target='_blank'>${item.url}</a>
+                                <i class="fa fa-times pull-right removeItem" title='Remove item' data-key="${itemNum}"></i>
                             </div>
                         </div>
-                    </li>
+                        </div>
         `
-    $('.list-group').append(entryHTML.toString());
+    $('.items').append(entryHTML.toString());
+
+    getPage(item.url).done((res) => {
+        let title = $(res).filter('title').text();
+        let faviconURL = 'http://www.google.com/s2/favicons?domain=';
+        let itemAnchor = $('.item'+itemNum+' a');
+        itemAnchor.text(title);
+        $('.item'+itemNum+' .favicon').attr('src', faviconURL + itemAnchor[0].hostname);
+        
+    });
+
 } 
+
+function getPage(url){
+    return $.ajax({
+        'type': 'get',
+        'url': url
+        });
+}
+
 
 
 function addNewItem(){
@@ -68,8 +83,10 @@ function addNewItem(){
         itemInfo.time = defaultTime;
 
         chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, (tabs)=>{ 
-            itemInfo.url = tabs[0].url;
-            updateItems(itemInfo);
+            if (!tabs[0].url.startsWith('chrome')){
+                itemInfo.url = tabs[0].url;
+                updateItems(itemInfo);
+            }
         });
     });
 }
