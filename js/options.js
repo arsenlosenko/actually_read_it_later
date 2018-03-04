@@ -26,8 +26,18 @@ $('.setDefaultTime').click(() => {
     if (defaultTime){
         chrome.storage.sync.set({'defaultTime': defaultTime});
         setAlarm();
+        if(window.innerWidth > 500){
+            closeTab();
+        }
     }
+    
 });
+
+function closeTab(){
+    chrome.tabs.getSelected((tab) => { 
+        chrome.tabs.remove(tab.id);
+    });
+}
 
 function init(){
     chrome.storage.sync.get('defaultTime', (item) => {
