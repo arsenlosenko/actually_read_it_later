@@ -7,19 +7,12 @@
 $(document).on('click', '.removeItem', (e) => {
     let targetElem = e.target;
     let itemKey = targetElem.dataset.key;
-    let itemName = "item"+itemKey;
-    $("."+itemName).remove();
-    removeItem(itemName);
+    $("."+itemKey).remove();
+    removeItem(itemKey);
 });
 
 function removeItem(itemName){
-    chrome.storage.sync.get('items', (item) => {
-        let allItems = item['items']; 
-        let foundItem = allItems.find((item) => {return item.name === itemName;});
-        let indexOfFoundItem = allItems.indexOf(foundItem);
-        let removedItem = allItems.splice(indexOfFoundItem, 1);
-        chrome.storage.sync.set({'items': allItems});
-    });
+    chrome.storage.sync.remove(itemName);
 }
 
 function onContextClick(info, tab){
@@ -31,64 +24,52 @@ chrome.contextMenus.onClicked.addListener(onContextClick);
 
 
 function renderItems(){
-   chrome.storage.sync.get('items', (item) => {
-      $.each(item['items'], (index, item) => {
-        appendEntry(index + 1, item);
-      });
+    chrome.storage.sync.get((items) => {
+        $.each(items, (index, item) => {
+            if(index != 'defaultTime'){
+                appendEntry(index, item);
+            }
+        });
     });
 } 
 
-function appendEntry(itemNum, item){
+function appendEntry(itemKey, item){
       let entryHTML = `
-                        <div class="col-md-12 col-lg-12">
-                        <div class="panel panel-default item${itemNum}">
-                            <div class="panel-body">
-                                <img height=16 width=16 src="${item.favicon}" />
-                                <a href="${item.url}" target='_blank'>${item.title}</a>
-                                <i class="fa fa-times pull-right removeItem" title='Remove item' data-key="${itemNum}"></i>
-                            </div>
-                        </div>
-                        </div>
+            <div class="col-md-12 col-lg-12">
+            <div class="panel panel-default ${itemKey}">
+                <div class="panel-body">
+                    <img height=16 width=16 src="${item.favicon}" />
+                    <a href="${item.url}" target='_blank'>${item.title}</a>
+                    <i class="fa fa-times pull-right removeItem" title='Remove item' data-key="${itemKey}"></i>
+                </div>
+            </div>
+            </div>
         `
     $('.items').append(entryHTML.toString());
 } 
 
-function getPage(url){
-    return $.ajax({
-        'type': 'get',
-        'url': url
-        });
-}
-
-
-
 function addNewItem(){
-    chrome.storage.sync.get('items',  (storageItems) => {
-        let entries = storageItems.items;
-        let itemInfo = {};
-        let itemsLength = entries.length;
-        let lastIndex = itemsLength - 1;
-        itemInfo.name = "item" + (itemsLength + 1);
+    let itemName = `item${getRandomInt(100)}`;
+    let itemInfo = {};
+    itemInfo[itemName] = {}; 
 
-        chrome.tabs.getSelected((tab) => {
-            itemInfo.url = tab.url;
-            itemInfo.favicon = tab.favIconUrl;
-            itemInfo.title = tab.title;
-            updateItems(itemInfo); 
-        });
+    chrome.tabs.getSelected((tab) => {
+        if(!tab.url.startsWith('chrome')){ 
+            itemInfo[itemName].url = tab.url;
+            itemInfo[itemName].favicon = tab.favIconUrl;
+            itemInfo[itemName].title = tab.title;
+            chrome.storage.sync.set(itemInfo);
+        }
     });
 }
 
-function updateItems(itemObj){
-    chrome.storage.sync.get('items', (item) => {
-        item['items'].push(itemObj);
-        chrome.storage.sync.set(item);
-    });
+function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
 }
 
 function init(){
-    addNewItem();
     renderItems();
+    addNewItem();
 } 
 
 document.addEventListener('DOMContentLoaded', init);
