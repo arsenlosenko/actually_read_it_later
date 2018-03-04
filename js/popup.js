@@ -43,24 +43,14 @@ function appendEntry(itemNum, item){
                         <div class="col-md-12 col-lg-12">
                         <div class="panel panel-default item${itemNum}">
                             <div class="panel-body">
-                                <img height=16 width=16 class='favicon'/>
-                                <a href="${item.url}" target='_blank'>${item.url}</a>
+                                <img height=16 width=16 src="${item.favicon}" />
+                                <a href="${item.url}" target='_blank'>${item.title}</a>
                                 <i class="fa fa-times pull-right removeItem" title='Remove item' data-key="${itemNum}"></i>
                             </div>
                         </div>
                         </div>
         `
     $('.items').append(entryHTML.toString());
-
-    getPage(item.url).done((res) => {
-        let title = $(res).filter('title').text();
-        let faviconURL = 'http://www.google.com/s2/favicons?domain=';
-        let itemAnchor = $('.item'+itemNum+' a');
-        itemAnchor.text(title);
-        $('.item'+itemNum+' .favicon').attr('src', faviconURL + itemAnchor[0].hostname);
-        
-    });
-
 } 
 
 function getPage(url){
@@ -73,20 +63,18 @@ function getPage(url){
 
 
 function addNewItem(){
-    chrome.storage.sync.get(['items', 'defaultTime'],  (storageItems) => {
+    chrome.storage.sync.get('items',  (storageItems) => {
         let entries = storageItems.items;
-        let defaultTime = storageItems.defaultTime;
         let itemInfo = {};
         let itemsLength = entries.length;
         let lastIndex = itemsLength - 1;
         itemInfo.name = "item" + (itemsLength + 1);
-        itemInfo.time = defaultTime;
 
-        chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, (tabs)=>{ 
-            if (!tabs[0].url.startsWith('chrome')){
-                itemInfo.url = tabs[0].url;
-                updateItems(itemInfo);
-            }
+        chrome.tabs.getSelected((tab) => {
+            itemInfo.url = tab.url;
+            itemInfo.favicon = tab.favIconUrl;
+            itemInfo.title = tab.title;
+            updateItems(itemInfo); 
         });
     });
 }
