@@ -8,9 +8,14 @@ chrome.alarms.onAlarm.addListener((alarm) =>  {
     chrome.tabs.create({url: '/popup.html'});
 });
 
+function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
+}
+
+chrome.contextMenus.create({"title": "Add to queue", "contexts": ["link"], "id": `${getRandomInt(1000)}`});
+
 chrome.runtime.onInstalled.addListener((details) => {
     if(details.reason == "install"){
         chrome.runtime.openOptionsPage(() =>{return});
-        chrome.storage.sync.set({'items':[]});
     }
 });
