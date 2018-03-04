@@ -5,14 +5,16 @@
 'use strict';
 
 $(document).on('click', '.removeItem', (e) => {
-    let targetElem = e.target;
-    let itemKey = targetElem.dataset.key;
-    $("."+itemKey).remove();
-    removeItem(itemKey);
+    removeItem(e.target.dataset.key);
 });
 
 function removeItem(itemName){
+    $("."+itemName).remove();
     chrome.storage.sync.remove(itemName);
+}
+
+function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
 }
 
 function onContextClick(info, tab){
@@ -49,27 +51,25 @@ function appendEntry(itemKey, item){
 } 
 
 function addNewItem(){
-    let itemName = `item${getRandomInt(100)}`;
-    let itemInfo = {};
-    itemInfo[itemName] = {}; 
-
     chrome.tabs.getSelected((tab) => {
         if(!tab.url.startsWith('chrome')){ 
+            let itemName = `item${getRandomInt(100)}`;
+            let itemInfo = {};
+
+            itemInfo[itemName] = {}; 
             itemInfo[itemName].url = tab.url;
             itemInfo[itemName].favicon = tab.favIconUrl;
             itemInfo[itemName].title = tab.title;
+
             chrome.storage.sync.set(itemInfo);
         }
     });
 }
 
-function getRandomInt(max) {
-      return Math.floor(Math.random() * Math.floor(max));
-}
 
 function init(){
-    renderItems();
     addNewItem();
+    renderItems();
 } 
 
 document.addEventListener('DOMContentLoaded', init);
