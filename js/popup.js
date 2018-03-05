@@ -44,14 +44,14 @@ function renderItems(){
 
 function appendEntry(itemKey, item){
       let entryHTML = `
-            <div class="col-md-12 col-lg-12">
-            <div class="panel panel-default ${itemKey}">
-                <div class="panel-body">
-                    <img height=16 width=16 src="${item.favicon}" />
-                    <a href="${item.url}" target='_blank'>${item.title}</a>
-                    <i class="fa fa-times pull-right removeItem" title='Remove item' data-key="${itemKey}"></i>
+            <div class="col-md-12 col-lg-12 col-xl-12">
+                <div class="panel panel-default ${itemKey}">
+                    <div class="panel-body">
+                        <img height=16 width=16 src="${item.favicon}" />
+                        <a href="${item.url}" target='_blank'>${item.title}</a>
+                        <i class="fa fa-times pull-right removeItem" title='Remove item' data-key="${itemKey}"></i>
+                    </div>
                 </div>
-            </div>
             </div>
         `
     $('.items').append(entryHTML);
@@ -70,7 +70,7 @@ function addItemFromCurrentTabData(){
 
             chrome.storage.sync.set(itemInfo);
             renderItems();
-        }else{ 
+        }else{
             renderItems();
         }
     });
@@ -105,8 +105,6 @@ function addItemFromUrl(url){
             itemInfo[itemName].url = url;
             itemInfo[itemName].favicon = faviconUrl + hostname;
             itemInfo[itemName].title = $(res).filter('title').text(); 
-            console.log(itemInfo);
-
             chrome.storage.sync.set(itemInfo);
     });
 }
