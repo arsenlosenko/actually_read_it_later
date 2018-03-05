@@ -8,6 +8,10 @@ body {
     background-color: #CCEFF1;
 }
 
+h3{
+    margin-bottom: 20px;
+}
+
 .form-control {
     width: 200px !important;
     display: inline-block !important;
