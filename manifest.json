@@ -1,14 +1,15 @@
 {
   "name": "Actually Read it Later",
   "description": "Extension for saving articles for later, and actually reading them",
-  "version": "1.1",
+  "version": "1.5",
   "manifest_version": 2,
    "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
-  "permissions": ["alarms", "notifications", "storage", "tabs"],
+  "permissions": ["alarms", "notifications", "storage", "tabs", "contextMenus", "<all_urls>"],
   "background": {
     "scripts": ["js/background.js"],
     "persistent": false
   },
+  "options_page": "options.html", 
   "browser_action": {
     "default_title": "Actually Read It Later",
     "default_popup": "popup.html"

@@ -4,44 +4,18 @@
 
 'use strict';
 
-let alarmUrl = "";
-let alarmTime = "";
+chrome.alarms.onAlarm.addListener((alarm) =>  {
+    chrome.tabs.create({url: '/popup.html'});
+});
 
-function formatNotificationMessage(url){
-    let phrases = [
-        `Here is your saved article:\n\n${url}\n\nHappy reading!`,
-        `Another article delivered for you!\n\n${url}\n\nEnjoy!`,
-        `Ring ring! Time to read!\n\n${url}`,
-        `There you go, another fine article!\n\n${url}`
-    ]
-    let randIndex = Math.floor(Math.random() * phrases.length);
-    return phrases[randIndex] 
+function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
 }
 
-chrome.alarms.onAlarm.addListener(function(alarm) {
-    alarmUrl = alarm.name; 
-    alarmTime = 'time'+alarmUrl.slice(-1);
+chrome.contextMenus.create({"title": "Add to queue", "contexts": ["link"], "id": `${getRandomInt(1000)}`});
 
-    chrome.storage.sync.get(alarmUrl,function(item){
-         chrome.notifications.create({
-             type:     'basic',
-             iconUrl:  '../img/notebook256.png',
-             title:    'Time to read!',
-             message:   formatNotificationMessage(item[alarmUrl]),
-             buttons: [
-                 {title: 'Read Now'},
-            ],
-            priority: 2});
-    });
-    
-    localStorage.removeItem(alarmUrl);
-    localStorage.removeItem(alarmTime);
-    });
-
-chrome.notifications.onButtonClicked.addListener(function(notificationID, buttonIndex) {
-      chrome.storage.sync.get(function(items) {
-            chrome.storage.sync.get(alarmUrl, function(item){
-                chrome.tabs.create({url: item[alarmUrl]});
-        });
-      });
+chrome.runtime.onInstalled.addListener((details) => {
+    if(details.reason == "install"){
+        chrome.runtime.openOptionsPage(() =>{return});
+    }
 });
