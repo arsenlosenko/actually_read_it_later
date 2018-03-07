@@ -6,7 +6,13 @@
 
 chrome.alarms.onAlarm.addListener((alarm) =>  {
     chrome.tabs.create({url: '/popup.html'});
+    setAlarmForTheNextDay();
 });
+
+function setAlarmForTheNextDay(){
+    let minutesInADay = 1440;
+    chrome.alarms.create('readingTimeAlarm', {delayInMinutes: minutesInADay});
+}
 
 function getRandomInt(max) {
       return Math.floor(Math.random() * Math.floor(max));
