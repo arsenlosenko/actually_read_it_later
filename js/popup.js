@@ -79,21 +79,19 @@ function addItemFromCurrentTabData(){
 function addItemToStorage(items, tab){
     let vals = Object.values(items);
     let itemsWithTabUrl = vals.find((item) =>{return item.url === tab.url});
-    if(!itemsWithTabUrl){
-        if(!tab.url.startsWith('chrome')){
-            let itemName = `item${getRandomInt(100)}`;
-            let itemInfo = {};
+    if(!itemsWithTabUrl && !tab.url.startsWith('chrome')){
+        let itemName = `item${getRandomInt(100)}`;
+        let itemInfo = {};
 
-            itemInfo[itemName] = {}; 
-            itemInfo[itemName].name = itemName;
-            itemInfo[itemName].url = tab.url;
-            itemInfo[itemName].favicon = tab.favIconUrl;
-            itemInfo[itemName].title = tab.title;
-            itemInfo[itemName].dateCreated = new Date().toISOString() ;
+        itemInfo[itemName] = {}; 
+        itemInfo[itemName].name = itemName;
+        itemInfo[itemName].url = tab.url;
+        itemInfo[itemName].favicon = tab.favIconUrl;
+        itemInfo[itemName].title = tab.title;
+        itemInfo[itemName].dateCreated = new Date().toISOString() ;
 
-            chrome.storage.sync.set(itemInfo);
-            renderItems();
-        }
+        chrome.storage.sync.set(itemInfo);
+        renderItems();
     }else{
         renderItems();
     }
