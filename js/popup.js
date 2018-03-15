@@ -68,8 +68,19 @@ function appendEntry(item){
 } 
 
 function addItemFromCurrentTabData(){
-    chrome.tabs.getSelected((tab) => {
-        if(!tab.url.startsWith('chrome')){ 
+    chrome.storage.sync.get((items) => {
+        delete items['defaultTime'];
+        chrome.tabs.getSelected((tab) => {
+            addItemToStorage(items, tab);
+        });
+    });
+}
+
+function addItemToStorage(items, tab){
+    let vals = Object.values(items);
+    let itemsWithTabUrl = vals.find((item) =>{return item.url === tab.url});
+    if(!itemsWithTabUrl){
+        if(!tab.url.startsWith('chrome')){
             let itemName = `item${getRandomInt(100)}`;
             let itemInfo = {};
 
@@ -82,10 +93,11 @@ function addItemFromCurrentTabData(){
 
             chrome.storage.sync.set(itemInfo);
             renderItems();
-        }else{
-            renderItems();
         }
-    });
+    }else{
+        renderItems();
+    }
+
 }
 
 function getPage(url){ 
