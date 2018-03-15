@@ -34,22 +34,32 @@ function onContextClick(info, tab){
 
 function renderItems(){
     chrome.storage.sync.get((items) => {
-        $.each(items, (index, item) => {
-            if(index != 'defaultTime'){
-                appendEntry(index, item);
-            }
+        delete items['defaultTime'];
+
+        let savedArticles = Object.values(items);
+        savedArticles.sort(sortByDate);
+
+        $.each(savedArticles, (index, item) => {
+            appendEntry(item);
         });
     });
 } 
 
-function appendEntry(itemKey, item){
+
+function sortByDate(objA, objB){
+    return new Date(objA.dateCreated) - new Date(objB.dateCreated)
+}
+
+
+
+function appendEntry(item){
       let entryHTML = `
             <div class="col-md-12 col-lg-12 col-xl-12">
-                <div class="panel panel-default ${itemKey}">
+                <div class="panel panel-default ${item.name}">
                     <div class="panel-body">
                         <img height=16 width=16 src="${item.favicon}" />
                         <a href="${item.url}" target='_blank'>${item.title}</a>
-                        <i class="fa fa-times pull-right removeItem" title='Remove item' data-key="${itemKey}"></i>
+                        <i class="fa fa-times pull-right removeItem" title='Remove item' data-key="${item.name}"></i>
                     </div>
                 </div>
             </div>
@@ -58,22 +68,36 @@ function appendEntry(itemKey, item){
 } 
 
 function addItemFromCurrentTabData(){
-    chrome.tabs.getSelected((tab) => {
-        if(!tab.url.startsWith('chrome')){ 
+    chrome.storage.sync.get((items) => {
+        delete items['defaultTime'];
+        chrome.tabs.getSelected((tab) => {
+            addItemToStorage(items, tab);
+        });
+    });
+}
+
+function addItemToStorage(items, tab){
+    let vals = Object.values(items);
+    let itemsWithTabUrl = vals.find((item) =>{return item.url === tab.url});
+    if(!itemsWithTabUrl){
+        if(!tab.url.startsWith('chrome')){
             let itemName = `item${getRandomInt(100)}`;
             let itemInfo = {};
 
             itemInfo[itemName] = {}; 
+            itemInfo[itemName].name = itemName;
             itemInfo[itemName].url = tab.url;
             itemInfo[itemName].favicon = tab.favIconUrl;
             itemInfo[itemName].title = tab.title;
+            itemInfo[itemName].dateCreated = new Date().toISOString() ;
 
             chrome.storage.sync.set(itemInfo);
             renderItems();
-        }else{
-            renderItems();
         }
-    });
+    }else{
+        renderItems();
+    }
+
 }
 
 function getPage(url){ 
