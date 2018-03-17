@@ -45,5 +45,8 @@ function init(){
     });
 }
 
+if (window.innerWidth > 550){
+    $('body').css({"margin-left": "35%", "margin-right": "35%"});
+}
 
 document.addEventListener('DOMContentLoaded', init);

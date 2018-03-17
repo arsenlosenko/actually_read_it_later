@@ -11,7 +11,10 @@ $(document).on('click', '.removeItem', (e) => {
 });
 
 function removeItem(itemName){
-    $("."+itemName).remove();
+    $("."+itemName).addClass("animated bounceOut")
+        .one('webkitAnimationEnd', () => {
+        $("."+itemName).remove();
+    });
     chrome.storage.sync.remove(itemName);
 }
 
@@ -76,6 +79,12 @@ function addItemFromCurrentTabData(){
     });
 }
 
+function addZoomInAnimation(itemName){
+    $("."+itemName).ready(() => {
+       $("."+itemName).addClass("animated zoomInUp"); 
+    });
+}
+
 function addItemToStorage(items, tab){
     let vals = Object.values(items);
     let itemsWithTabUrl = vals.find((item) =>{return item.url === tab.url});
@@ -92,6 +101,7 @@ function addItemToStorage(items, tab){
 
         chrome.storage.sync.set(itemInfo);
         renderItems();
+        addZoomInAnimation(itemName);
     }else{
         renderItems();
     }
@@ -137,6 +147,11 @@ function addNewItem(url=" "){
     }else{ 
         addItemFromUrl(url); 
     }
+}
+
+if (window.innerWidth > 550){
+    $('body').css({"margin-left": "35%", "margin-right": "35%"});
+    $("[class^=item]").addClass("animated fadeInLeft");
 }
 
 addNewItem();
