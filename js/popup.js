@@ -11,9 +11,13 @@ $(document).on('click', '.removeItem', (e) => {
 });
 
 function removeItem(itemName){
-    $("."+itemName).addClass("animated bounceOut")
+    let itemClass = "." + itemName;
+    if($(itemClass).hasClass("animated zoomInUp")){
+        $(itemClass).removeClass("animated zoomInUp");
+    }
+    $(itemClass).addClass("animated bounceOut")
         .one('webkitAnimationEnd', () => {
-        $("."+itemName).remove();
+        $(itemClass).remove();
     });
     chrome.storage.sync.remove(itemName);
 }
