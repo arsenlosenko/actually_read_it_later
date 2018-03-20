@@ -66,6 +66,12 @@ function appendEntry(item){
                     <div class="panel-body">
                         <img height=16 width=16 src="${item.favicon}" />
                         <a href="${item.url}" target='_blank'>${item.title}</a>
+                        <a class="pull-right share-link"
+                           href="https://www.addtoany.com/share_save?linkurl=${encodeURIComponent(item.url)}"
+                           title="Share anywhere"
+                           target="_blank">
+                        <i class="fa fa-share-alt"></i>
+                        </a>
                         <i class="fa fa-times pull-right removeItem" title='Remove item' data-key="${item.name}"></i>
                     </div>
                 </div>
@@ -73,6 +79,7 @@ function appendEntry(item){
         `
     $('.items').append(entryHTML);
 } 
+
 
 function addItemFromCurrentTabData(){
     chrome.storage.sync.get((items) => {

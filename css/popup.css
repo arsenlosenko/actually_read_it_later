@@ -28,3 +28,13 @@ h3 {
 .panel{
     margin-bottom: 10px !important;
 }
+
+.fa-share-alt{
+    color: black;
+    font-size: 15px; 
+    position: relative;
+    top: 3px;
+    right: 35px;
+}
+
+
