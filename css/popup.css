@@ -29,12 +29,10 @@ h3 {
     margin-bottom: 10px !important;
 }
 
-.fa-share-alt{
+.fa-share{
     color: black;
     font-size: 15px; 
-    position: relative;
-    top: 3px;
-    right: 35px;
 }
+
 
 

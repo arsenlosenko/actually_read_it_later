@@ -64,14 +64,14 @@ function appendEntry(item){
             <div class="col-md-12 col-lg-12 col-xl-12">
                 <div class="panel panel-default ${item.name}">
                     <div class="panel-body">
-                        <img height=16 width=16 src="${item.favicon}" />
-                        <a href="${item.url}" target='_blank'>${item.title}</a>
-                        <a class="pull-right share-link"
+                        <a class="share-link"
                            href="https://www.addtoany.com/share_save?linkurl=${encodeURIComponent(item.url)}"
                            title="Share anywhere"
                            target="_blank">
-                        <i class="fa fa-share-alt"></i>
+                        <i class="fa fa-share"></i>
                         </a>
+                        <img height=16 width=16 src="${item.favicon}" />
+                        <a class="item-url" href="${item.url}" target='_blank'>${item.title}</a>
                         <i class="fa fa-times pull-right removeItem" title='Remove item' data-key="${item.name}"></i>
                     </div>
                 </div>
@@ -166,4 +166,3 @@ if (window.innerWidth > 550){
 }
 
 addNewItem();
-
